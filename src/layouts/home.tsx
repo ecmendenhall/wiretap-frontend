@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Container,
-  Header,
-  Divider,
-  Button,
-  Grid,
-  Icon
-} from "semantic-ui-react";
+import { Container, Header, Divider, Grid } from "semantic-ui-react";
 
 import Topbar from "../components/topbar";
 import Feed from "../components/feed";
+import CallButton from "../components/callButton";
 
 interface Contact {
   name: string;
@@ -51,10 +45,7 @@ export class HomeLayout extends React.Component<Props, {}> {
               <Feed feed={this.props.feed} />
             </Grid.Column>
             <Grid.Column width={4}>
-              <Button icon labelPosition="left" size="huge">
-                <Icon name="phone" />
-                Start a call
-              </Button>
+              <CallButton />
             </Grid.Column>
           </Grid>
         </Container>

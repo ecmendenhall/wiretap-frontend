@@ -1,6 +1,7 @@
 import React from "react";
-import { Card, Button, CommentActionProps } from "semantic-ui-react";
-import { ENETUNREACH } from "constants";
+import { Card, Button } from "semantic-ui-react";
+import PublishButton from "./publishButton";
+import UnPublishButton from "./unpublishButton";
 
 interface Contact {
   name: string;
@@ -41,9 +42,9 @@ export class Feed extends React.Component<Props, {}> {
 
   publishButton(entry: FeedEntry) {
     return entry.published ? (
-      <Button floated="left" icon="trash" content="Delete" />
+      <UnPublishButton entryId={entry.id} />
     ) : (
-      <Button floated="left" icon="microphone" content="Publish" />
+      <PublishButton entryId={entry.id} />
     );
   }
 
