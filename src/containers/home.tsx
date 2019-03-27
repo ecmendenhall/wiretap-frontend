@@ -1,10 +1,10 @@
 import React from "react";
-import { Query } from "react-apollo";
+import { graphql, ChildDataProps } from "react-apollo";
 import gql from "graphql-tag";
 
 import Home from "../layouts/home";
 
-const GET_HOME = gql`
+const HomeQuery = gql`
   {
     user {
       name
@@ -29,19 +29,47 @@ const GET_HOME = gql`
   }
 `;
 
-export class HomeContainer extends React.Component<{}, {}> {
-  render() {
-    return (
-      <Query query={GET_HOME}>
-        {({ loading, error, data }) => {
-          if (loading) return "Loading...";
-          if (error) return "Error!";
-          const { user } = data;
-          return <Home {...user} />;
-        }}
-      </Query>
-    );
-  }
+interface Contact {
+  name: string;
 }
 
-export default HomeContainer;
+interface Call {
+  to: Contact;
+  from: Contact;
+  recordingUrl: string;
+}
+
+interface Entry {
+  id: number;
+  title: string;
+  summary: string;
+  published: boolean;
+  call: Call;
+}
+
+interface Feed {
+  entries: Entry[];
+}
+
+interface User {
+  name: string;
+  feed: Feed;
+}
+
+interface HomeQueryResult {
+  user: User;
+}
+
+type Props = ChildDataProps<{}, HomeQueryResult, {}>;
+
+export const HomeContainer: React.SFC<Props> = ({
+  data: { loading, error, user }
+}) => {
+  if (loading) return <div>"Loading..."</div>;
+  if (error) return <div>"Error!"</div>;
+  return <Home {...user} />;
+};
+
+export default graphql<{}, HomeQueryResult, {}, Props>(HomeQuery)(
+  HomeContainer
+);

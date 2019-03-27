@@ -33,6 +33,11 @@ interface Props {
 }
 
 export class HomeLayout extends React.Component<Props, {}> {
+  static defaultProps = {
+    name: "User",
+    feed: []
+  };
+
   render() {
     return (
       <div>

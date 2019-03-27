@@ -30,7 +30,28 @@ const logIn = (
     .then(res => res.data.login.token)
     .then(token => {
       storage.setItem("wiretap.token", token);
+      client.writeData({
+        data: {
+          auth: { __typename: "Auth", authenticated: true }
+        }
+      });
       return token;
+    })
+    .catch(err => {
+      const { networkError } = err;
+      let message = "Something went wrong.";
+      if (networkError && networkError.statusCode === 404) {
+        message = "Incorrect username or password.";
+      }
+      client.writeData({
+        data: {
+          auth: {
+            __typename: "Auth",
+            authenticated: false,
+            errorMessage: message
+          }
+        }
+      });
     });
 };
 

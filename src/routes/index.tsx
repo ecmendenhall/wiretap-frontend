@@ -5,7 +5,7 @@ import PrivateRoute from "./private";
 import LoginContainer from "../containers/login";
 import HomeContainer from "../containers/home";
 
-export default class Routes extends React.Component<{}, {}> {
+export default class Routes extends React.Component {
   render() {
     return (
       <BrowserRouter>

@@ -8,8 +8,7 @@ import {
 } from "semantic-ui-react";
 
 export interface Props {
-  error: boolean;
-  errorMessage: string;
+  errorMessage: string | null;
   onSubmit?: (state: State) => void;
 }
 export interface State {
@@ -37,7 +36,8 @@ class Login extends Component<Props, State> {
   };
 
   render() {
-    const { error, errorMessage } = this.props;
+    const { errorMessage } = this.props;
+    const error = !!errorMessage;
     const { username, password } = this.state;
     return (
       <Container>

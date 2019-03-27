@@ -1,7 +1,5 @@
 import React from "react";
-import { Card, Button } from "semantic-ui-react";
-import PublishButton from "./publishButton";
-import UnPublishButton from "./unpublishButton";
+import FeedEntry from "./feedEntry";
 
 interface Contact {
   name: string;
@@ -13,7 +11,7 @@ interface Call {
   recordingUrl: string;
 }
 
-interface FeedEntry {
+interface Entry {
   id: number;
   title: string;
   summary: string;
@@ -22,57 +20,21 @@ interface FeedEntry {
 }
 
 interface FeedEntries {
-  entries: FeedEntry[];
+  entries: Entry[];
 }
 
 interface Props {
   feed: FeedEntries;
 }
 
-export class Feed extends React.Component<Props, {}> {
-  title(entry: FeedEntry) {
-    return entry.title || `${entry.call.to.name}`;
-  }
-
-  description(entry: FeedEntry) {
-    return (
-      entry.summary || `${entry.call.from.name} calls ${entry.call.to.name}`
-    );
-  }
-
-  publishButton(entry: FeedEntry) {
-    return entry.published ? (
-      <UnPublishButton entryId={entry.id} />
-    ) : (
-      <PublishButton entryId={entry.id} />
-    );
-  }
-
-  entries() {
-    return this.props.feed.entries.map(entry => {
-      return (
-        <Card fluid key={entry.id}>
-          <Card.Content header={this.title(entry)} />
-          <Card.Content description={this.description(entry)} />
-          <Card.Content extra>
-            {this.publishButton(entry)}
-            <Button
-              as="a"
-              icon="play"
-              content="Play"
-              href={entry.call.recordingUrl}
-              target="_blank"
-              floated="right"
-            />
-          </Card.Content>
-        </Card>
-      );
-    });
-  }
-
-  render() {
-    return <div>{this.entries()}</div>;
-  }
-}
+export const Feed: React.SFC<Props> = ({ feed }) => {
+  return (
+    <div>
+      {feed.entries.map(entry => (
+        <FeedEntry {...entry} />
+      ))}
+    </div>
+  );
+};
 
 export default Feed;

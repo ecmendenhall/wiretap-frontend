@@ -19,9 +19,21 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const cache = new InMemoryCache();
+
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: cache
+});
+
+cache.writeData({
+  data: {
+    auth: {
+      __typename: "Auth",
+      authenticated: !!localStorage.getItem("wiretap.token"),
+      errorMessage: null
+    }
+  }
 });
 
 const GraphQLProvider = props => (

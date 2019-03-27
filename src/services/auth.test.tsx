@@ -1,6 +1,4 @@
 import auth, { LOGIN_QUERY } from "./auth";
-import ApolloClient from "apollo-client";
-import { NormalizedCacheObject } from "apollo-cache-inmemory";
 
 describe("auth service", () => {
   it("calls client with log in query", () => {
@@ -9,7 +7,8 @@ describe("auth service", () => {
         return new Promise((resolve, reject) => {
           resolve({ data: { login: { token: "abc123" } } });
         });
-      })
+      }),
+      writeData: jest.fn()
     };
     auth.logIn({ username: "username", password: "password" }, fakeClient);
     expect(fakeClient.mutate).toHaveBeenCalledWith({
@@ -27,7 +26,8 @@ describe("auth service", () => {
         return new Promise((resolve, reject) => {
           resolve({ data: { login: { token: "abc123" } } });
         });
-      })
+      }),
+      writeData: jest.fn()
     };
     const fakeStorage = {
       setItem: jest.fn()

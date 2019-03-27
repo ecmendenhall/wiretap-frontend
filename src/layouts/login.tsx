@@ -5,11 +5,16 @@ import Login from "../components/login";
 
 interface Props {
   authenticated: boolean;
-  error: boolean;
-  errorMessage: string;
+  errorMessage: string | null;
+  onSubmit: any;
 }
 
 export class LoginLayout extends React.Component<Props, {}> {
+  static defaultProps = {
+    authenticated: false,
+    errorMessage: ""
+  };
+
   render() {
     return (
       <Grid centered>
