@@ -1,12 +1,15 @@
 import React from "react";
 import { mount } from "enzyme";
-import { Message } from "semantic-ui-react";
 
 import Login, { Props, State } from "./login";
 
 describe("Login", () => {
+  let props = {
+    errorMessage: ""
+  };
+
   it("stores username in internal state", () => {
-    const login = mount<Props, State>(<Login />);
+    const login = mount<Props, State>(<Login {...props} />);
     const input = login.find('input[name="username"]');
     input.simulate("change", { target: { value: "username" } });
     const { username } = login.state();
@@ -14,7 +17,7 @@ describe("Login", () => {
   });
 
   it("stores password in internal state", () => {
-    const login = mount<Props, State>(<Login />);
+    const login = mount<Props, State>(<Login {...props} />);
     const input = login.find('input[name="password"]');
     input.simulate("change", { target: { value: "password" } });
     const { password } = login.state();
@@ -28,7 +31,7 @@ describe("Login", () => {
           resolve();
         })
     );
-    const login = mount<Props, State>(<Login onSubmit={onSubmit} />);
+    const login = mount<Props, State>(<Login {...props} onSubmit={onSubmit} />);
     const usernameInput = login.find('input[name="username"]');
     usernameInput.simulate("change", { target: { value: "username" } });
     const passwordInput = login.find('input[name="password"]');
@@ -39,5 +42,12 @@ describe("Login", () => {
       username: "username",
       password: "password"
     });
+  });
+
+  it("displays error when errormessage is present", () => {
+    props.errorMessage = "Error message";
+    const login = mount<Props, State>(<Login {...props} />);
+    const message = login.find(".message");
+    expect(message.text()).toBe("Error message");
   });
 });

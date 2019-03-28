@@ -2,7 +2,6 @@ import React from "react";
 import { shallow } from "enzyme";
 
 import FeedEntry from "./feedEntry";
-import UnPublishButton from "./unpublishButton";
 import PublishButton from "./publishButton";
 
 describe("FeedEntry", () => {
@@ -44,16 +43,5 @@ describe("FeedEntry", () => {
     expect(entry.find({ description: "From Name calls To Name" })).toHaveLength(
       1
     );
-  });
-
-  it("Shows an unpublish button when content is published", () => {
-    const entry = shallow(<FeedEntry {...props} />);
-    expect(entry.find(UnPublishButton)).toHaveLength(1);
-  });
-
-  it("Shows a publish button when content is unpublished", () => {
-    props.published = false;
-    const entry = shallow(<FeedEntry {...props} />);
-    expect(entry.find(PublishButton)).toHaveLength(1);
   });
 });

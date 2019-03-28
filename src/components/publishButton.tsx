@@ -1,13 +1,9 @@
 import React from "react";
 import { Button, Icon } from "semantic-ui-react";
 import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
+import { graphql, ChildMutateProps, MutationFn } from "react-apollo";
 
-interface Props {
-  entryId: number;
-}
-
-const PUBLISH_ENTRY = gql`
+export const PublishEntryMutation = gql`
   mutation($id: ID!, $entry: EntryInput!) {
     updateEntry(id: $id, input: $entry) {
       id
@@ -16,31 +12,61 @@ const PUBLISH_ENTRY = gql`
   }
 `;
 
-export class PublishButton extends React.Component<Props, {}> {
-  render() {
-    return (
-      <Mutation mutation={PUBLISH_ENTRY}>
-        {(publish, { data }) => {
-          const onClick = (
-            e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-          ) => {
-            e.preventDefault();
-            publish({
-              variables: { id: this.props.entryId, entry: { published: true } }
-            });
-          };
-          return (
-            <Button
-              floated="left"
-              icon="microphone"
-              content="Publish"
-              onClick={onClick}
-            />
-          );
-        }}
-      </Mutation>
-    );
-  }
+interface PublishEntryMutationResult {
+  id: number;
+  published: boolean;
 }
 
-export default PublishButton;
+interface PublishButtonProps {
+  entryId: number;
+  published: boolean;
+}
+
+interface PublishButtonChildProps {
+  entryId: number;
+  published: boolean;
+  setPublished: MutationFn;
+}
+
+type Props = ChildMutateProps<
+  PublishButtonChildProps,
+  PublishEntryMutationResult,
+  {}
+>;
+
+export const PublishButton: React.SFC<Props> = ({
+  entryId,
+  published,
+  setPublished
+}) => {
+  const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setPublished({
+      variables: { id: entryId, entry: { published: !published } }
+    });
+  };
+
+  if (published) {
+    return (
+      <Button
+        floated="left"
+        icon="microphone"
+        content="Publish"
+        onClick={onClick}
+      />
+    );
+  } else {
+    return (
+      <Button floated="left" icon="remove" content="Remove" onClick={onClick} />
+    );
+  }
+};
+
+graphql;
+
+export default graphql<
+  PublishButtonProps,
+  PublishEntryMutationResult,
+  {},
+  Props
+>(PublishEntryMutation, { name: "setPublished" })(PublishButton);
